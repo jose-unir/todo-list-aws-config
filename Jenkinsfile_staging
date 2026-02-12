@@ -134,10 +134,9 @@ pipeline {
                     git checkout master
                     git checkout -- samconfig.toml
                     git pull origin master
-                    git merge origin/develop --no-ff --no-commit || true
-                    git checkout --ours Jenkinsfile_agentes
-                    git add Jenkinsfile_agentes
-                    git diff-index --quiet HEAD || git commit -m "Merge develop into master keeping master Jenkinsfile_agentes"
+                    git merge -X theirs origin/develop --no-ff || true
+                    git checkout HEAD@{1} -- Jenkinsfile_agentes 2>/dev/null || trie
+                    git diff-index --quiet HEAD || git commit -m "Merge develop into master keeping Jenkinsfile_agentes"
                     git push origin master
                     '''
                 }
