@@ -8,6 +8,7 @@ pipeline {
       steps {
         git branch: 'develop', url: 'https://github.com/jose-unir/unir-aws.git'
         sh '''
+        rm -f samconfig.toml
         git clone --single-branch --branch staging 'https://github.com/jose-unir/todo-list-aws-config.git'
         cp todo-list-aws-config/samconfig.toml .
         rm -rf todo-list-aws-config
@@ -131,11 +132,12 @@ pipeline {
                     git remote set-url origin https://${GIT_USERNAME}:${GIT_TOKEN}@github.com/jose-unir/unir-aws.git
                     git fetch origin
                     git checkout master
+                    git checkout -- samconfig.toml
                     git pull origin master
                     git merge origin/develop --no-ff --no-commit || true
                     git checkout --ours Jenkinsfile_agentes
                     git add Jenkinsfile_agentes
-                    git commit -m "Merge develop into master keeping master Jenkinsfile_agentes"
+                    git diff-index --quiet HEAD || git commit -m "Merge develop into master keeping master Jenkinsfile_agentes"
                     git push origin master
                     '''
                 }
